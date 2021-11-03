@@ -3,36 +3,53 @@
 namespace HttpEloquent\HttpClients;
 
 use GuzzleHttp\Client;
-use Illuminate\Http\Client\Response;
-use HttpEloquent\Interfaces\HttpClient as HttpClientInterface;
-use Illuminate\Http\Client\Factory as ClientFactory;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
 use Psr\Http\Message\ResponseInterface;
+use HttpEloquent\Interfaces\HttpClient as HttpClientInterface;
 
 class HttpClient implements HttpClientInterface
 {
+    /**
+     * @var MockHandler|null
+     */
+    protected $handler;
+
+    public function __construct(?MockHandler $handler = null)
+    {
+        $this->handler = $handler;
+    }
+
     public function get(string $url, array $query = []): ResponseInterface
     {
-        return (new Client())->get($url, [
+        return $this->getClient()->get($url, [
             'query' => $query
         ]);
     }
 
     public function post(string $url, array $params): ResponseInterface
     {
-        return (new Client())->post($url, [
-            'body' => $params
+        return $this->getClient()->post($url, [
+            'json' => $params
         ]);
     }
 
     public function patch(string $url, array $params): ResponseInterface
     {
-        return (new Client())->patch($url, [
-            'body' => $params
+        return $this->getClient()->patch($url, [
+            'json' => $params
         ]);
     }
 
     public function delete(string $url): ResponseInterface
     {
-        return (new Client())->delete($url);
+        return $this->getClient()->delete($url);
+    }
+
+    protected function getClient(): Client
+    {
+        return new Client([
+            'handler' => HandlerStack::create($this->handler)
+        ]);
     }
 }
