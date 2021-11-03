@@ -2,28 +2,32 @@
 
 namespace Tests\Unit;
 
+use GuzzleHttp\Psr7\Response as Psr7Response;
+use GuzzleHttp\Psr7\Stream;
 use Mockery;
 use stdClass;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
-use LaravelHttpEloquent\Service;
+use HttpEloquent\Service;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Client\Response;
-use LaravelHttpEloquent\GenericModel;
-use LaravelHttpEloquent\Types\BaseUrl;
-use LaravelHttpEloquent\Types\ModelMap;
-use LaravelHttpEloquent\Types\ServiceConfig;
-use LaravelHttpEloquent\Interfaces\HttpClient;
+use HttpEloquent\GenericModel;
+use HttpEloquent\Types\BaseUrl;
+use HttpEloquent\Types\ModelMap;
+use HttpEloquent\Types\ServiceConfig;
+use HttpEloquent\Interfaces\HttpClient;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class ServiceTest extends TestCase
 {
     /**
-     * @var \LaravelHttpEloquent\Service
+     * @var \HttpEloquent\Service
      */
     protected $service;
 
     /**
-     * @var \LaravelHttpEloquent\Interfaces\HttpClient|\Mockery\Mock
+     * @var \HttpEloquent\Interfaces\HttpClient|\Mockery\Mock
      */
     protected $client;
 
@@ -32,7 +36,7 @@ class ServiceTest extends TestCase
         parent::setUp();
 
         /**
-         * @var \LaravelHttpEloquent\Interfaces\HttpClient|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\HttpClient|\Mockery\Mock
          */
         $this->client = Mockery::mock(HttpClient::class);
 
@@ -109,20 +113,12 @@ class ServiceTest extends TestCase
         $this->assertEquals('page=1&per_page=10', (string) $this->service->getQuery());
     }
 
-    public function testFirstMethodWorks(): void
+    public function testCanGetFirstResult(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'collect' => collect([
-                [
-                    'foo' => 'bar'
-                ]
-            ])
-        ]);
+        $response = new Psr7Response(200, [], json_encode([[ 'foo' => 'bar' ]]));
 
         $this->client->shouldReceive([
             'get' => $response
@@ -138,42 +134,28 @@ class ServiceTest extends TestCase
     public function testCanGetMultipleModels(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'collect' => collect([
-                [
-                    'foo' => 'bar'
-                ]
-            ])
-        ]);
+        $response = new Psr7Response(200, [], json_encode([[ 'foo' => 'bar' ]]));
 
         $this->client->shouldReceive([
             'get' => $response
         ]);
 
-        $collection = $this->service->foos()->get();
+        $results = $this->service->foos()->get();
 
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertInstanceOf(GenericModel::class, $collection->first());
-        $this->assertEquals('bar', $collection->first()->foo);
-        $this->assertEquals(1, $collection->count());
+        $this->assertIsArray($results);
+        $this->assertInstanceOf(GenericModel::class, $results[0]);
+        $this->assertEquals('bar',  $results[0]->foo);
+        $this->assertEquals(1, count($results));
     }
 
     public function testCanGetSingleModel(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'json' => [
-                'foo' => 'bar'
-            ]
-        ]);
+        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
 
         $this->client->shouldReceive([
             'get' => $response
@@ -189,15 +171,9 @@ class ServiceTest extends TestCase
     public function testCanFindModel(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'json' => [
-                'foo' => 'bar'
-            ]
-        ]);
+        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
 
         $this->client->shouldReceive([
             'get' => $response
@@ -213,15 +189,9 @@ class ServiceTest extends TestCase
     public function testCanCreateModel(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'json' => [
-                'foo' => 'bar'
-            ]
-        ]);
+        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
 
         $this->client->shouldReceive([
             'post' => $response
@@ -239,15 +209,9 @@ class ServiceTest extends TestCase
     public function testCanUpdateModel(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'json' => [
-                'foo' => 'bar'
-            ]
-        ]);
+        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
 
         $this->client->shouldReceive([
             'patch' => $response
@@ -265,15 +229,9 @@ class ServiceTest extends TestCase
     public function testCanDeleteModel(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'json' => [
-                'foo' => 'bar'
-            ]
-        ]);
+        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
 
         $this->client->shouldReceive([
             'delete' => $response
@@ -289,28 +247,20 @@ class ServiceTest extends TestCase
     public function testCanGetModelWithMagicMethod(): void
     {
         /**
-         * @var \Illuminate\Http\Client\Response|\Mockery\Mock
+         * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = Mockery::mock(Response::class);
-
-        $response->shouldReceive([
-            'collect' => collect([
-                [
-                    'foo' => 'bar'
-                ]
-            ])
-        ]);
+        $response = new Psr7Response(200, [], json_encode([[ 'foo' => 'bar' ]]));
 
         $this->client->shouldReceive([
             'get' => $response
         ]);
 
-        $collection = $this->service->foos;
+        $results = $this->service->foos;
 
         $this->assertTrue($this->service->getPlural());
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertInstanceOf(GenericModel::class, $collection->first());
-        $this->assertEquals('bar', $collection->first()->foo);
-        $this->assertEquals(1, $collection->count());
+        $this->assertIsArray($results);
+        $this->assertInstanceOf(GenericModel::class, $results[0]);
+        $this->assertEquals('bar', $results[0]->foo);
+        $this->assertEquals(1, count($results));
     }
 }

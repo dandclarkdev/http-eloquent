@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelHttpEloquent\Types;
+namespace HttpEloquent\Types;
 
 class BaseUrl
 {

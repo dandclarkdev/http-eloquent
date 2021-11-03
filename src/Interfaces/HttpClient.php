@@ -1,16 +1,16 @@
 <?php
 
-namespace LaravelHttpEloquent\Interfaces;
+namespace HttpEloquent\Interfaces;
 
-use Illuminate\Http\Client\Response;
+use Psr\Http\Message\ResponseInterface;
 
 interface HttpClient
 {
-    public function get(string $url, array $query = []): Response;
+    public function get(string $url, array $query = []): ResponseInterface;
 
-    public function post(string $url, array $params): Response;
+    public function post(string $url, array $params): ResponseInterface;
 
-    public function patch(string $url, array $params): Response;
+    public function patch(string $url, array $params): ResponseInterface;
 
-    public function delete(string $url): Response;
+    public function delete(string $url): ResponseInterface;
 }

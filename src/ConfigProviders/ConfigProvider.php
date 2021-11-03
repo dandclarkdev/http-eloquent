@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelHttpEloquent\ConfigProviders;
+namespace HttpEloquent\ConfigProviders;
 
-use LaravelHttpEloquent\Interfaces\ConfigProvider as ConfigProviderInterface;
+use HttpEloquent\Interfaces\ConfigProvider as ConfigProviderInterface;
 
 class ConfigProvider implements ConfigProviderInterface
 {

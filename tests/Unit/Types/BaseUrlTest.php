@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Types;
 
-use LaravelHttpEloquent\Types\BaseUrl;
+use HttpEloquent\Types\BaseUrl;
 use PHPUnit\Framework\TestCase;
 
 class BaseUrlTest extends TestCase

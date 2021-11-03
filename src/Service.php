@@ -1,37 +1,39 @@
 <?php
 
-namespace LaravelHttpEloquent;
+namespace HttpEloquent;
 
-use LaravelHttpEloquent\Types\Path;
+use GuzzleHttp\Psr7\Message;
+use HttpEloquent\Types\Path;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use LaravelHttpEloquent\Types\Query;
-use LaravelHttpEloquent\GenericModel;
-use LaravelHttpEloquent\Interfaces\HttpClient;
-use LaravelHttpEloquent\Types\BaseUrl;
-use LaravelHttpEloquent\Types\ModelMap;
-use LaravelHttpEloquent\Types\ServiceConfig;
-use LaravelHttpEloquent\Interfaces\Service as ServiceInterface;
+use HttpEloquent\Types\Query;
+use HttpEloquent\GenericModel;
+use HttpEloquent\Interfaces\HttpClient;
+use HttpEloquent\Types\BaseUrl;
+use HttpEloquent\Types\ModelMap;
+use HttpEloquent\Types\ServiceConfig;
+use HttpEloquent\Interfaces\Service as ServiceInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class Service implements ServiceInterface
 {
     /**
-     * @var \LaravelHttpEloquent\Types\BaseUrl
+     * @var \HttpEloquent\Types\BaseUrl
      */
     protected $baseUrl;
 
     /**
-     * @var \LaravelHttpEloquent\Types\Path
+     * @var \HttpEloquent\Types\Path
      */
     protected $path;
 
     /**
-     * @var \LaravelHttpEloquent\Types\Query
+     * @var \HttpEloquent\Types\Query
      */
     protected $query;
 
     /**
-     * @var \LaravelHttpEloquent\Types\ModelMap
+     * @var \HttpEloquent\Types\ModelMap
      */
     protected $modelMap;
 
@@ -51,7 +53,7 @@ class Service implements ServiceInterface
     protected $plural = false;
 
     /**
-     * @var \LaravelHttpEloquent\Interfaces\HttpClient
+     * @var \HttpEloquent\Interfaces\HttpClient
      */
     protected $client;
 
@@ -103,17 +105,16 @@ class Service implements ServiceInterface
         return $this->where('per_page', $perPage);
     }
 
-    protected function resolve(Response $response)
+    protected function resolve(ResponseInterface $response)
     {
         $class = $this->getResolveTo();
 
         if ($this->getPlural()) {
-            return $response->collect()
-                ->map(function (array $item) use ($class) {
-                    return new $class(...$item);
-                });
+            return array_map(function (array $item) use ($class) {
+                return new $class(...$item);
+            }, json_decode((string) $response->getBody(), true));
         } else {
-            return new $class(...$response->json());
+            return new $class(...(json_decode((string) $response->getBody(), true)));
         }
     }
 
@@ -121,13 +122,15 @@ class Service implements ServiceInterface
     {
         $this->setPlural(true);
 
-        return $this->resolve(
+        $results = $this->resolve(
             $this->getClient()
                 ->get(
                     $this->getUrl(),
                     $this->getQuery()->toArray()
                 )
-        )->first();
+        );
+
+        return count($results) > 0 ? $results[0] : null;
     }
 
     public function get()
@@ -193,7 +196,7 @@ class Service implements ServiceInterface
         ]);
     }
 
-     /**
+    /**
      * Get the value of plural
      */
     public function getPlural(): bool

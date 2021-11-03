@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelHttpEloquent\Interfaces;
+namespace HttpEloquent\Interfaces;
 
-use LaravelHttpEloquent\Interfaces\Service;
-use LaravelHttpEloquent\Interfaces\HttpClient;
-use LaravelHttpEloquent\Interfaces\ConfigProvider;
+use HttpEloquent\Interfaces\Service;
+use HttpEloquent\Interfaces\HttpClient;
+use HttpEloquent\Interfaces\ConfigProvider;
 
 interface ServiceFactory
 {

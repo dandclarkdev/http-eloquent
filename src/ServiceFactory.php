@@ -1,24 +1,24 @@
 <?php
 
-namespace LaravelHttpEloquent;
+namespace HttpEloquent;
 
-use LaravelHttpEloquent\Service;
-use LaravelHttpEloquent\Types\BaseUrl;
-use LaravelHttpEloquent\Types\ModelMap;
-use LaravelHttpEloquent\Types\ServiceConfig;
-use LaravelHttpEloquent\Interfaces\ConfigProvider;
-use LaravelHttpEloquent\Interfaces\HttpClient;
-use LaravelHttpEloquent\Interfaces\ServiceFactory as ServiceFactoryInterface;
+use HttpEloquent\Service;
+use HttpEloquent\Types\BaseUrl;
+use HttpEloquent\Types\ModelMap;
+use HttpEloquent\Types\ServiceConfig;
+use HttpEloquent\Interfaces\ConfigProvider;
+use HttpEloquent\Interfaces\HttpClient;
+use HttpEloquent\Interfaces\ServiceFactory as ServiceFactoryInterface;
 
 class ServiceFactory implements ServiceFactoryInterface
 {
     /**
-     * @var \LaravelHttpEloquent\Interfaces\ConfigProvider
+     * @var \HttpEloquent\Interfaces\ConfigProvider
      */
     protected $configProvider;
 
     /**
-     * @var \LaravelHttpEloquent\Interfaces\HttpClient
+     * @var \HttpEloquent\Interfaces\HttpClient
      */
     protected $client;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelHttpEloquent\Types;
+namespace HttpEloquent\Types;
 
-use LaravelHttpEloquent\Types\BaseUrl;
+use HttpEloquent\Types\BaseUrl;
 
 class ServiceConfig
 {

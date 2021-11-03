@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Types;
 
-use LaravelHttpEloquent\Types\ModelMap;
+use HttpEloquent\Types\ModelMap;
 use PHPUnit\Framework\TestCase;
 
 class ModelMapTest extends TestCase

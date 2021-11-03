@@ -3,7 +3,7 @@
 namespace Tests\Unit\Types;
 
 use PHPUnit\Framework\TestCase;
-use LaravelHttpEloquent\Types\Path;
+use HttpEloquent\Types\Path;
 
 class PathTest extends TestCase
 {

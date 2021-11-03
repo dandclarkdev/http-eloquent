@@ -5,10 +5,10 @@ namespace Tests\Unit;
 use Mockery;
 use stdClass;
 use PHPUnit\Framework\TestCase;
-use LaravelHttpEloquent\Service;
-use LaravelHttpEloquent\ServiceFactory;
-use LaravelHttpEloquent\Interfaces\HttpClient;
-use LaravelHttpEloquent\Interfaces\ConfigProvider;
+use HttpEloquent\Service;
+use HttpEloquent\ServiceFactory;
+use HttpEloquent\Interfaces\HttpClient;
+use HttpEloquent\Interfaces\ConfigProvider;
 
 class ServiceFactoryTest extends TestCase
 {
@@ -22,7 +22,7 @@ class ServiceFactoryTest extends TestCase
     public function testCanBeInstantiated(): void
     {
         /**
-         * @var \LaravelHttpEloquent\Interfaces\ConfigProvider|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\ConfigProvider|\Mockery\Mock
          */
         $configProvider = Mockery::mock(ConfigProvider::class);
 
@@ -31,7 +31,7 @@ class ServiceFactoryTest extends TestCase
         ]);
 
         /**
-         * @var \LaravelHttpEloquent\Interfaces\HttpClient|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\HttpClient|\Mockery\Mock
          */
         $client = Mockery::mock(HttpClient::class);
 
@@ -49,7 +49,7 @@ class ServiceFactoryTest extends TestCase
     public function testCanBeInstantiatedWithMagicMethod(): void
     {
         /**
-         * @var \LaravelHttpEloquent\Interfaces\ConfigProvider|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\ConfigProvider|\Mockery\Mock
          */
         $configProvider = Mockery::mock(ConfigProvider::class);
 
@@ -58,7 +58,7 @@ class ServiceFactoryTest extends TestCase
         ]);
 
         /**
-         * @var \LaravelHttpEloquent\Interfaces\HttpClient|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\HttpClient|\Mockery\Mock
          */
         $client = Mockery::mock(HttpClient::class);
 
@@ -82,7 +82,7 @@ class ServiceFactoryTest extends TestCase
     public function testCanGetConfigProvider(): void
     {
         /**
-         * @var \LaravelHttpEloquent\Interfaces\ConfigProvider|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\ConfigProvider|\Mockery\Mock
          */
         $configProvider = Mockery::mock(ConfigProvider::class);
 
@@ -91,7 +91,7 @@ class ServiceFactoryTest extends TestCase
         ]);
 
         /**
-         * @var \LaravelHttpEloquent\Interfaces\HttpClient|\Mockery\Mock
+         * @var \HttpEloquent\Interfaces\HttpClient|\Mockery\Mock
          */
         $client = Mockery::mock(HttpClient::class);
 

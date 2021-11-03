@@ -3,7 +3,7 @@
 namespace Tests\Unit\Types;
 
 use PHPUnit\Framework\TestCase;
-use LaravelHttpEloquent\Types\Query;
+use HttpEloquent\Types\Query;
 
 class QueryTest extends TestCase
 {

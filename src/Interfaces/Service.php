@@ -1,11 +1,11 @@
 <?php
 
-namespace LaravelHttpEloquent\Interfaces;
+namespace HttpEloquent\Interfaces;
 
-use LaravelHttpEloquent\Types\Path;
-use LaravelHttpEloquent\Types\Query;
-use LaravelHttpEloquent\Types\BaseUrl;
-use LaravelHttpEloquent\Types\ModelMap;
+use HttpEloquent\Types\Path;
+use HttpEloquent\Types\Query;
+use HttpEloquent\Types\BaseUrl;
+use HttpEloquent\Types\ModelMap;
 
 interface Service
 {

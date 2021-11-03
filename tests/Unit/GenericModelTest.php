@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use LaravelHttpEloquent\GenericModel;
+use HttpEloquent\GenericModel;
 use PHPUnit\Framework\TestCase;
 
 class GenericModelTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelHttpEloquent\Interfaces;
+namespace HttpEloquent\Interfaces;
 
 interface ConfigProvider
 {
