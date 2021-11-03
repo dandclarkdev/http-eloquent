@@ -31,7 +31,7 @@ class ServiceFactory implements ServiceFactoryInterface
     public function make(string $serviceName): Service
     {
         $config = $this->configProvider->getConfig(
-            "laravelhttpeloquent.services.$serviceName"
+            "$serviceName"
         );
 
         return new Service(
