@@ -57,6 +57,8 @@ class Service implements ServiceInterface
      */
     protected $client;
 
+    protected const WRAPPER_PROPERTY = null;
+
     public function __construct(ServiceConfig $config, HttpClient $client)
     {
         $this->baseUrl = $config->getBaseUrl();
@@ -64,6 +66,21 @@ class Service implements ServiceInterface
         $this->query = new Query();
         $this->modelMap = $config->getModelMap();
         $this->client = $client;
+    }
+
+    protected static function access(ResponseInterface $response): array
+    {
+        return json_decode((string) $response->getBody(), true);
+    }
+
+    protected static function transformProperty(string $property): string
+    {
+        return $property;
+    }
+
+    protected static function transformProperties(array $resource): array
+    {
+        return $resource;
     }
 
     public function getClient(): HttpClient
@@ -109,12 +126,16 @@ class Service implements ServiceInterface
     {
         $class = $this->getResolveTo();
 
+        $accessed = $this->access($response);
+
         if ($this->getPlural()) {
             return array_map(function (array $item) use ($class) {
-                return new $class(...$item);
+                return new $class(
+                    ...self::transformProperties($item)
+                );
             }, json_decode((string) $response->getBody(), true));
         } else {
-            return new $class(...(json_decode((string) $response->getBody(), true)));
+            return new $class(...self::transformProperties($accessed));
         }
     }
 
