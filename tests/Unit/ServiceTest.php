@@ -12,6 +12,7 @@ use HttpEloquent\Types\ModelMap;
 use HttpEloquent\Types\ServiceConfig;
 use HttpEloquent\Interfaces\HttpClient;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use HttpEloquent\Types\WrapperProperty;
 
 class ServiceTest extends TestCase
 {
@@ -39,7 +40,8 @@ class ServiceTest extends TestCase
                 new BaseUrl('https://foo.com'),
                 new ModelMap([
                     'foos' => GenericModel::class,
-                ])
+                ]),
+                new WrapperProperty('data')
             ),
             $this->client
         );
@@ -112,7 +114,11 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([[ 'foo' => 'bar' ]]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => [
+                ['foo' => 'bar']
+            ]
+        ]));
 
         $this->client->shouldReceive([
             'get' => $response
@@ -125,12 +131,45 @@ class ServiceTest extends TestCase
         $this->assertEquals('bar', $model->foo);
     }
 
+    public function testCanGetFirstResultWithoutWrapper(): void
+    {
+        /**
+         * @var \Psr\Http\Message\ResponseInterface
+         */
+        $response = new Psr7Response(200, [], json_encode([
+            ['foo' => 'bar']
+        ]));
+
+        $this->client->shouldReceive([
+            'get' => $response
+        ]);
+
+        $model = (new Service(
+                new ServiceConfig(
+                    new BaseUrl('https://foo.com'),
+                    new ModelMap([
+                        'foos' => GenericModel::class,
+                    ]),
+                    null
+                ),
+                $this->client
+            ))->first();
+
+        $this->assertInstanceOf(GenericModel::class, $model);
+
+        $this->assertEquals('bar', $model->foo);
+    }
+
     public function testCanGetMultipleModels(): void
     {
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([[ 'foo' => 'bar' ]]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => [
+                ['foo' => 'bar']
+            ]
+        ]));
 
         $this->client->shouldReceive([
             'get' => $response
@@ -149,14 +188,16 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => ['foo' => 'bar']
+        ]));
 
         $this->client->shouldReceive([
             'get' => $response
         ]);
 
         $model = $this->service->foos(1)->get();
-
+ 
         $this->assertInstanceOf(GenericModel::class, $model);
 
         $this->assertEquals('bar', $model->foo);
@@ -167,7 +208,9 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => ['foo' => 'bar']
+        ]));
 
         $this->client->shouldReceive([
             'get' => $response
@@ -185,7 +228,9 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => ['foo' => 'bar']
+        ]));
 
         $this->client->shouldReceive([
             'post' => $response
@@ -205,7 +250,9 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => ['foo' => 'bar']
+        ]));
 
         $this->client->shouldReceive([
             'patch' => $response
@@ -225,7 +272,9 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([ 'foo' => 'bar' ]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => ['foo' => 'bar']
+        ]));
 
         $this->client->shouldReceive([
             'delete' => $response
@@ -243,7 +292,11 @@ class ServiceTest extends TestCase
         /**
          * @var \Psr\Http\Message\ResponseInterface
          */
-        $response = new Psr7Response(200, [], json_encode([[ 'foo' => 'bar' ]]));
+        $response = new Psr7Response(200, [], json_encode([
+            'data' => [
+                ['foo' => 'bar']
+            ]
+        ]));
 
         $this->client->shouldReceive([
             'get' => $response

@@ -57,7 +57,10 @@ class Service implements ServiceInterface
      */
     protected $client;
 
-    protected const WRAPPER_PROPERTY = null;
+    /**
+     * @var string|null
+     */
+    protected $wrapperProperty = null;
 
     public function __construct(ServiceConfig $config, HttpClient $client)
     {
@@ -66,11 +69,14 @@ class Service implements ServiceInterface
         $this->query = new Query();
         $this->modelMap = $config->getModelMap();
         $this->client = $client;
+        $this->wrapperProperty = $config->getWrapperProperty() ? (string) $config->getWrapperProperty() : null;
     }
 
-    protected static function access(ResponseInterface $response): array
+    protected function access(ResponseInterface $response): array
     {
-        return json_decode((string) $response->getBody(), true);
+        $json = json_decode((string) $response->getBody(), true);
+
+        return $this->wrapperProperty ? $json[$this->wrapperProperty] : $json;
     }
 
     protected static function transformProperty(string $property): string
@@ -143,7 +149,7 @@ class Service implements ServiceInterface
                 return new $class(
                     ...self::transformProperties($item)
                 );
-            }, json_decode((string) $response->getBody(), true));
+            }, $accessed);
         } else {
             return new $class(...self::transformProperties($accessed));
         }

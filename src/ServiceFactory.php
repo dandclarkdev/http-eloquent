@@ -10,6 +10,7 @@ use HttpEloquent\Interfaces\HttpClient;
 use HttpEloquent\Interfaces\ConfigProvider;
 use HttpEloquent\Interfaces\Service as ServiceInterface;
 use HttpEloquent\Interfaces\ServiceFactory as ServiceFactoryInterface;
+use HttpEloquent\Types\WrapperProperty;
 
 class ServiceFactory implements ServiceFactoryInterface
 {
@@ -42,7 +43,10 @@ class ServiceFactory implements ServiceFactoryInterface
                 ),
                 new ModelMap(
                     $config['models'] ?? []
-                )
+                ),
+                isset($config['wrapper']) ? new WrapperProperty(
+                    $config['wrapper']
+                ) : null
             ),
             $this->getClient()
         );

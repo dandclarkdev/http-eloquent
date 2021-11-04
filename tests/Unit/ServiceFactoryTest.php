@@ -17,6 +17,7 @@ class ServiceFactoryTest extends TestCase
         'models' => [
             'bars' => stdClass::class
         ],
+        'wrapper' => 'data'
     ];
 
     public function testCanBeInstantiated(): void

@@ -16,12 +16,19 @@ class ServiceConfig
      */
     protected $modelMap;
 
+    /**
+     * @var WrapperProperty|null
+     */
+    protected $wrapperProperty;
+
     public function __construct(
         BaseUrl $baseUrl,
-        ModelMap $modelMap
+        ModelMap $modelMap,
+        ?WrapperProperty $wrapperProperty
     ) {
         $this->baseUrl = $baseUrl;
         $this->modelMap = $modelMap;
+        $this->wrapperProperty = $wrapperProperty;
     }
 
     public function getBaseUrl(): BaseUrl
@@ -32,5 +39,10 @@ class ServiceConfig
     public function getModelMap(): ModelMap
     {
         return $this->modelMap;
+    }
+
+    public function getWrapperProperty(): ?WrapperProperty
+    {
+        return $this->wrapperProperty;
     }
 }
