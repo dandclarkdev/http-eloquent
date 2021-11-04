@@ -79,8 +79,18 @@ class Service implements ServiceInterface
     }
 
     protected static function transformProperties(array $resource): array
-    {
-        return $resource;
+    {   
+        $result = [];
+
+        foreach ($resource as $key => $value) {
+            $assoc = [static::transformProperty($key) => $value];
+
+            foreach ($assoc as $mapKey => $mapValue) {
+                $result[$mapKey] = $mapValue;
+            }
+        }
+
+        return $result;
     }
 
     public function getClient(): HttpClient
