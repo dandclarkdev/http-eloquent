@@ -2,22 +2,16 @@
 
 namespace Tests\Unit;
 
-use GuzzleHttp\Psr7\Response as Psr7Response;
-use GuzzleHttp\Psr7\Stream;
 use Mockery;
 use stdClass;
-use Mockery\Mock;
-use PHPUnit\Framework\TestCase;
 use HttpEloquent\Service;
-use Illuminate\Support\Collection;
-use Illuminate\Http\Client\Response;
 use HttpEloquent\GenericModel;
 use HttpEloquent\Types\BaseUrl;
+use PHPUnit\Framework\TestCase;
 use HttpEloquent\Types\ModelMap;
 use HttpEloquent\Types\ServiceConfig;
 use HttpEloquent\Interfaces\HttpClient;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use GuzzleHttp\Psr7\Response as Psr7Response;
 
 class ServiceTest extends TestCase
 {
