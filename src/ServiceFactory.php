@@ -24,6 +24,8 @@ class ServiceFactory implements ServiceFactoryInterface
      */
     protected $client;
 
+    protected const FALLBACK_SERVICE_CLASS = Service::class;
+
     public function __construct(ConfigProvider $configProvider, HttpClient $client)
     {
         $this->configProvider = $configProvider;
@@ -33,10 +35,12 @@ class ServiceFactory implements ServiceFactoryInterface
     public function make(string $serviceName): ServiceInterface
     {
         $config = $this->configProvider->getConfig(
-            "$serviceName"
+            $serviceName
         );
 
-        return new Service(
+        $serviceClass = isset($config['service']) ? $config['service'] : static::FALLBACK_SERVICE_CLASS;
+
+        return new $serviceClass(
             new ServiceConfig(
                 new BaseUrl(
                     $config['base_url']
