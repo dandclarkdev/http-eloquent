@@ -6,8 +6,9 @@ use HttpEloquent\Service;
 use HttpEloquent\Types\BaseUrl;
 use HttpEloquent\Types\ModelMap;
 use HttpEloquent\Types\ServiceConfig;
-use HttpEloquent\Interfaces\ConfigProvider;
 use HttpEloquent\Interfaces\HttpClient;
+use HttpEloquent\Interfaces\ConfigProvider;
+use HttpEloquent\Interfaces\Service as ServiceInterface;
 use HttpEloquent\Interfaces\ServiceFactory as ServiceFactoryInterface;
 
 class ServiceFactory implements ServiceFactoryInterface
@@ -28,7 +29,7 @@ class ServiceFactory implements ServiceFactoryInterface
         $this->client = $client;
     }
 
-    public function make(string $serviceName): Service
+    public function make(string $serviceName): ServiceInterface
     {
         $config = $this->configProvider->getConfig(
             "$serviceName"
